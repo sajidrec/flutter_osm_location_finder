@@ -59,6 +59,7 @@ class _UserLocationInputScreenState extends State<UserLocationInputScreen> {
                 UserLocationInputScreenFunctions.onSearchButtonClick(
               formKey: _formKey,
               context: context,
+              address: value.trim(),
             ),
             validator: (value) => LocationInputValidator.validateInput(
               userInput: value,
@@ -78,6 +79,7 @@ class _UserLocationInputScreenState extends State<UserLocationInputScreen> {
         onPressed: () => UserLocationInputScreenFunctions.onSearchButtonClick(
           formKey: _formKey,
           context: context,
+          address: _locationInputTEController.text.trim(),
         ),
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(
