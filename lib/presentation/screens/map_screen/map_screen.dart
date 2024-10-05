@@ -8,11 +8,15 @@ import 'package:flutter_osm_location_marker/presentation/utility/app_color.dart'
 
 class MapScreen extends StatelessWidget {
   final LatLng userInputLatLng;
+  final LatLng userCurrentLocation;
 
-  const MapScreen({
+  MapScreen({
     super.key,
     required this.userInputLatLng,
+    required this.userCurrentLocation,
   });
+
+  final MapController _mapController = MapController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +29,15 @@ class MapScreen extends StatelessWidget {
         body: Stack(
           children: [
             _mapContent(),
-            _buildMapToggleButton(),
+            _buildMapTypeToggleButton(),
+            _buildLocationToggleButton(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMapToggleButton() {
+  Widget _buildMapTypeToggleButton() {
     return Positioned(
       top: 20,
       right: 20,
@@ -59,30 +64,71 @@ class MapScreen extends StatelessWidget {
     );
   }
 
-  Widget _mapContent() {
-    return FlutterMap(
-      options: MapOptions(
-        initialCenter: userInputLatLng,
-        initialZoom: 16,
-        interactionOptions: const InteractionOptions(
-          flags: InteractiveFlag.all,
-        ),
+  Widget _buildLocationToggleButton() {
+    return Positioned(
+      top: 90,
+      right: 20,
+      child: GetBuilder<MapScreenController>(
+        builder: (mapScreenController) {
+          return FloatingActionButton(
+            backgroundColor: mapScreenController.giveSearchLocation
+                ? Colors.blueAccent.withOpacity(
+                    0.75,
+                  )
+                : Colors.white.withOpacity(0.9),
+            onPressed: () {
+              mapScreenController.switchLocation();
+              _mapController.move(
+                  mapScreenController.giveSearchLocation
+                      ? userInputLatLng
+                      : userCurrentLocation,
+                  16);
+            },
+            child: Icon(
+              Icons.person,
+              color: mapScreenController.giveSearchLocation
+                  ? Colors.white.withOpacity(0.9)
+                  : Colors.blueAccent.withOpacity(0.75),
+            ),
+          );
+        },
       ),
-      children: [
-        _osmTileLayer,
-        MarkerLayer(
-          markers: [
-            Marker(
-              point: userInputLatLng,
-              child: const Icon(
-                Icons.location_pin,
-                color: Colors.red,
-                size: 50,
-              ),
+    );
+  }
+
+  Widget _mapContent() {
+    return GetBuilder<MapScreenController>(
+      builder: (mapScreenController) {
+        return FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+            initialCenter: mapScreenController.giveSearchLocation
+                ? userInputLatLng
+                : userCurrentLocation,
+            initialZoom: 16,
+            interactionOptions: const InteractionOptions(
+              flags: InteractiveFlag.all,
+            ),
+          ),
+          children: [
+            _osmTileLayer,
+            MarkerLayer(
+              markers: [
+                Marker(
+                  point: mapScreenController.giveSearchLocation
+                      ? userInputLatLng
+                      : userCurrentLocation,
+                  child: const Icon(
+                    Icons.location_pin,
+                    color: Colors.red,
+                    size: 50,
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 
