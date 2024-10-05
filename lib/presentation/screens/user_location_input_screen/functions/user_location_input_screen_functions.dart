@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_location_marker/presentation/screens/map_screen/map_screen.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 
 class UserLocationInputScreenFunctions {
+
   static Future<LatLng?> _convertAddressToLatLong(String address) async {
     try {
       List<Location> locations = await locationFromAddress(address);
@@ -28,12 +30,9 @@ class UserLocationInputScreenFunctions {
 
       if (latLongByUserInput != null) {
         if (context.mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MapScreen(
-                userInputLatLng: latLongByUserInput,
-              ),
+          Get.to(
+            () => MapScreen(
+              userInputLatLng: latLongByUserInput,
             ),
           );
         }
