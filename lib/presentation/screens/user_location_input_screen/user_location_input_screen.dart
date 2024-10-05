@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_location_marker/presentation/screens/user_location_input_screen/validators/location_input_validator.dart';
-import 'package:flutter_osm_location_marker/presentation/utility/app_color.dart';
+import 'package:flutter_osm_location_marker/presentation/screens/user_location_input_screen/widgets/search_box_button.dart';
 import 'package:flutter_osm_location_marker/state_holder/user_location_input_screen_controller.dart';
 import 'package:get/get.dart';
 
@@ -66,49 +66,13 @@ class _UserLocationInputScreenState extends State<UserLocationInputScreen> {
             );
           }),
           const SizedBox(height: 15),
-          _buildSearchButton(),
+          SearchBoxButton(
+            context: context,
+            formKey: _formKey,
+            locationInputTEController: _locationInputTEController,
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSearchButton() {
-    return SizedBox(
-      width: double.maxFinite,
-      height: 50,
-      child: GetBuilder<UserLocationInputScreenController>(
-          builder: (userLocationInputScreenController) {
-        return ElevatedButton(
-          onPressed: () {
-            FocusScope.of(context).unfocus();
-            if (_formKey.currentState!.validate()) {
-              userLocationInputScreenController.onSearchButtonClick(
-                address: _locationInputTEController.text.trim(),
-              );
-            }
-          },
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(
-              AppColor.backgroundGreenColor,
-            ),
-            foregroundColor: WidgetStatePropertyAll(
-              AppColor.backgroundWhiteColor,
-            ),
-          ),
-          child: userLocationInputScreenController.inProgress
-              ? Center(
-                  child: CircularProgressIndicator(
-                    color: AppColor.backgroundWhiteColor,
-                  ),
-                )
-              : const Text(
-                  "Search",
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-        );
-      }),
     );
   }
 }
