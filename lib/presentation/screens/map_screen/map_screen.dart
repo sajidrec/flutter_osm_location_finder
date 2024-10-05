@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_osm_location_marker/presentation/utility/app_urls.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_osm_location_marker/presentation/utility/app_color.dart';
 
@@ -41,16 +42,20 @@ class _MapScreenState extends State<MapScreen> {
       top: 20,
       right: 20,
       child: FloatingActionButton(
-        backgroundColor: Colors.blueAccent.withOpacity(
-          0.75,
-        ),
+        backgroundColor: _isNormalMap
+            ? Colors.blueAccent.withOpacity(
+                0.75,
+              )
+            : Colors.white.withOpacity(0.9),
         onPressed: () {
           _isNormalMap = !_isNormalMap;
           setState(() {});
         },
         child: Icon(
           Icons.layers,
-          color: Colors.white.withOpacity(0.9),
+          color: _isNormalMap
+              ? Colors.white.withOpacity(0.9)
+              : Colors.blueAccent.withOpacity(0.75),
         ),
       ),
     );
@@ -85,8 +90,8 @@ class _MapScreenState extends State<MapScreen> {
 
   TileLayer get _osmTileLayer => TileLayer(
         urlTemplate: _isNormalMap
-            ? "https://tile.openstreetmap.org/{z}/{x}/{y}.png" // Normal OSM
-            : "https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+            ? AppUrls.osmMapUrlNormal // Normal OSM
+            : AppUrls.osmMapUrlSecondType,
         // Hot OSM map
         userAgentPackageName: "dev.fleaflet.flutter_map.example",
       );
