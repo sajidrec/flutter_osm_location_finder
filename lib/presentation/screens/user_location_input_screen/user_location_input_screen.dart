@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_osm_location_marker/presentation/screens/user_location_input_screen/functions/user_location_input_screen_functions.dart';
 import 'package:flutter_osm_location_marker/presentation/screens/user_location_input_screen/validators/location_input_validator.dart';
 import 'package:flutter_osm_location_marker/presentation/utility/app_color.dart';
+import 'package:flutter_osm_location_marker/state_holder/user_location_input_screen_controller.dart';
+import 'package:get/get.dart';
 
 class UserLocationInputScreen extends StatefulWidget {
   const UserLocationInputScreen({super.key});
@@ -49,22 +50,21 @@ class _UserLocationInputScreenState extends State<UserLocationInputScreen> {
       key: _formKey,
       child: Column(
         children: [
-          TextFormField(
-            decoration: const InputDecoration(
-                hintText: "City name, address, coordinates"),
-            keyboardType: TextInputType.streetAddress,
-            textInputAction: TextInputAction.search,
-            controller: _locationInputTEController,
-            onFieldSubmitted: (value) =>
-                UserLocationInputScreenFunctions.onSearchButtonClick(
-              formKey: _formKey,
-              context: context,
-              address: value.trim(),
-            ),
-            validator: (value) => LocationInputValidator.validateInput(
-              userInput: value,
-            ),
-          ),
+          GetBuilder<UserLocationInputScreenController>(
+              builder: (userLocationInputScreenController) {
+            return TextFormField(
+              decoration: const InputDecoration(
+                  hintText: "City name, address, coordinates"),
+              keyboardType: TextInputType.streetAddress,
+              textInputAction: TextInputAction.search,
+              controller: _locationInputTEController,
+              onFieldSubmitted: (value) =>
+                  userLocationInputScreenController.onSearchButtonClick,
+              validator: (value) => LocationInputValidator.validateInput(
+                userInput: value?.trim(),
+              ),
+            );
+          }),
           const SizedBox(height: 15),
           _buildSearchButton(),
         ],
@@ -75,22 +75,40 @@ class _UserLocationInputScreenState extends State<UserLocationInputScreen> {
   Widget _buildSearchButton() {
     return SizedBox(
       width: double.maxFinite,
-      child: ElevatedButton(
-        onPressed: () => UserLocationInputScreenFunctions.onSearchButtonClick(
-          formKey: _formKey,
-          context: context,
-          address: _locationInputTEController.text.trim(),
-        ),
-        style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(
-            AppColor.backgroundGreenColor,
+      height: 50,
+      child: GetBuilder<UserLocationInputScreenController>(
+          builder: (userLocationInputScreenController) {
+        return ElevatedButton(
+          onPressed: () {
+            FocusScope.of(context).unfocus();
+            if (_formKey.currentState!.validate()) {
+              userLocationInputScreenController.onSearchButtonClick(
+                address: _locationInputTEController.text.trim(),
+              );
+            }
+          },
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(
+              AppColor.backgroundGreenColor,
+            ),
+            foregroundColor: WidgetStatePropertyAll(
+              AppColor.backgroundWhiteColor,
+            ),
           ),
-          foregroundColor: WidgetStatePropertyAll(
-            AppColor.backgroundWhiteColor,
-          ),
-        ),
-        child: const Text("Search"),
-      ),
+          child: userLocationInputScreenController.inProgress
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: AppColor.backgroundWhiteColor,
+                  ),
+                )
+              : const Text(
+                  "Search",
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+        );
+      }),
     );
   }
 }
