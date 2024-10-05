@@ -19,9 +19,9 @@ that's it then you can run the project.
 # Video Preview of project setup and run
 
 You can watch project setup and run
-video [click here](https://drive.google.com/file/d/1VUva3qnTJZqDJWTIFxw3Cq-0iVyk7WB-/view?usp=drive_link)
+video [click here](https://drive.google.com/file/d/1JqF-XgXv7SB6vGpwbDJiUzXeb8sMBvH6/view?usp=drive_link)
 
 # Screenshot of two screen
 
-![User input screen](assets/screenshots/user_input_screen_ss.png)
-![Map Screen](assets/screenshots/map_screen_ss.png)
+![User input screen](assets/screenshots/1.png)
+![Map Screen](assets/screenshots/2.png)

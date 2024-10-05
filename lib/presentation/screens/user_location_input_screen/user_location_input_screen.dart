@@ -58,8 +58,11 @@ class _UserLocationInputScreenState extends State<UserLocationInputScreen> {
               keyboardType: TextInputType.streetAddress,
               textInputAction: TextInputAction.search,
               controller: _locationInputTEController,
-              onFieldSubmitted: (value) =>
-                  userLocationInputScreenController.onSearchButtonClick,
+              onFieldSubmitted: (value) {
+                userLocationInputScreenController.onSearchButtonClick(
+                  address: value.trim(),
+                );
+              },
               validator: (value) => LocationInputValidator.validateInput(
                 userInput: value?.trim(),
               ),
