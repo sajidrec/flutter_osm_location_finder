@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_osm_location_marker/presentation/utility/app_color.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter_osm_location_marker/presentation/utility/app_color.dart';
 
 class MapScreen extends StatefulWidget {
   final LatLng userInputLatLng;
@@ -16,6 +16,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  bool _isNormalMap = true; // Flag to track map mode
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,7 +26,32 @@ class _MapScreenState extends State<MapScreen> {
           backgroundColor: AppColor.backgroundWhiteColor,
           title: const Text("Map"),
         ),
-        body: _mapContent(),
+        body: Stack(
+          children: [
+            _mapContent(),
+            _buildMapToggleButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMapToggleButton() {
+    return Positioned(
+      top: 20,
+      right: 20,
+      child: FloatingActionButton(
+        backgroundColor: Colors.blueAccent.withOpacity(
+          0.75,
+        ),
+        onPressed: () {
+          _isNormalMap = !_isNormalMap;
+          setState(() {});
+        },
+        child: Icon(
+          Icons.layers,
+          color: Colors.white.withOpacity(0.9),
+        ),
       ),
     );
   }
@@ -57,7 +84,10 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   TileLayer get _osmTileLayer => TileLayer(
-        urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        urlTemplate: _isNormalMap
+            ? "https://tile.openstreetmap.org/{z}/{x}/{y}.png" // Normal OSM
+            : "https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+        // Hot OSM map
         userAgentPackageName: "dev.fleaflet.flutter_map.example",
       );
 }
