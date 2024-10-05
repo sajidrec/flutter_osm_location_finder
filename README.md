@@ -23,5 +23,5 @@ video [click here](https://drive.google.com/file/d/1VUva3qnTJZqDJWTIFxw3Cq-0iVyk
 
 # Screenshot of two screen
 
-![](assets/screenshots/user_input_screen_ss.png)
-![](assets/screenshots/map_screen_ss.png)
+![User input screen](assets/screenshots/user_input_screen_ss.png)
+![Map Screen](assets/screenshots/map_screen_ss.png)
